@@ -1,0 +1,16 @@
+# Geometría del Piso (Unidades: 7x5)
+v 0 0 0
+v 7 0 0
+v 7 0 5
+v 0 0 5
+
+# Coordenadas UV proporcionales al tamaño del plano
+# Esto hace que la textura se repita 7 veces en X y 5 veces en Z
+vt 0 0
+vt 7 0
+vt 7 5
+vt 0 5
+
+# Definición de caras enlazando cada Vértice con su respectiva UV (v/vt)
+f 1/1 2/2 3/3 4/4
+f 4/4 3/3 2/2 1/1
