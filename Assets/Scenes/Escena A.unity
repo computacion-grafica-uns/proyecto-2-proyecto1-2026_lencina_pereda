@@ -187,41 +187,32 @@ MonoBehaviour:
   m_GameObject: {fileID: 765185027}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ae1cec1a53188b48815ab98a7e3f958, type: 3}
+  m_Script: {fileID: 11500000, guid: 4c602a419504380468fedeec5a12b32d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shaderBlinnPhong: {fileID: 4800000, guid: 3ebff6d5d2154684bbcfa11512d32ce0, type: 3}
-  shaderCookTorrance: {fileID: 4800000, guid: 0548a6ce415885a4e8b2c58ce73d8937, type: 3}
-  shaderSuperToon: {fileID: 4800000, guid: 9079bd638994a604cb59a2970b9392c0, type: 3}
-  datosBarro: {fileID: 11400000, guid: 2badfb3267e7f1449807cd9715f618d6, type: 2}
-  datosMetal: {fileID: 11400000, guid: 2f4cbe4be8024cc408c011ffa81b09b6, type: 2}
-  datosVidrio: {fileID: 11400000, guid: 97f3e4f371d71744b9419de5e69f449b, type: 2}
-  rutaPisoObj: Assets/Models/Escena A/piso.obj
-  modeloPavaPrefab: {fileID: 919132149155446097, guid: 28666b54aaa6dab4981c3c1141f56674, type: 3}
-  texturaPisoMadera: {fileID: 2800000, guid: 1ae634e87d719b54895913d4dc0ba1fb, type: 3}
-  texturaPavaDifusa: {fileID: 2800000, guid: beba6a0fadac31349b9050099f1d0991, type: 3}
-  texturaPavaNormal: {fileID: 2800000, guid: 6d72cc7d37f17f544954b58696ebe242, type: 3}
-  generadorProcedural: {fileID: 11400000, guid: ddc228e46e7b4ff459aeb8bba9e88da9, type: 2}
-  filas: 3
-  columnas: 6
-  espaciadoX: 4
-  espaciadoZ: 4
-  escalaPava: {x: 0.6, y: 0.6, z: 0.6}
-  rotSolInicial: {x: 50, y: -30, z: 0}
+  objetosEscena: []
+  rotSolInicial: {x: 45, y: 45, z: 0}
   colorSol: {r: 1, g: 1, b: 1, a: 1}
-  intensidadSolInicial: 1
-  velocidadSol: 10
+  intensidadSolInicial: 0.8
+  velocidadSol: 50
   posPuntualInicial: {x: 0, y: 4, z: 0}
-  colorPuntual: {r: 1, g: 0, b: 0, a: 1}
+  colorPuntual: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   intensidadPuntualInicial: 1.2
   radioPuntualInicial: 8
-  posSpotInicial: {x: -2, y: 5, z: -2}
+  posSpotInicial: {x: -2, y: 4.5, z: 0}
   rotSpotInicial: {x: 90, y: 0, z: 0}
-  colorSpot: {r: 0, g: 0, b: 1, a: 1}
+  colorSpot: {r: 0, g: 1, b: 1, a: 1}
   intensidadSpotInicial: 1.5
   radioSpotInicial: 10
-  aperturaSpotInicial: 35
-  objetosEscena: []
+  aperturaSpotInicial: 30
+  shaderActividad11: {fileID: 4800000, guid: 3ebff6d5d2154684bbcfa11512d32ce0, type: 3}
+  texturaPiso: {fileID: 2800000, guid: 1ae634e87d719b54895913d4dc0ba1fb, type: 3}
+  nombreArchivoObj: piso.obj
+  texturaPava: {fileID: 2800000, guid: beba6a0fadac31349b9050099f1d0991, type: 3}
+  nombreArchivoDae: base_model.dae
+  posicionPava: {x: 0, y: 0, z: 0}
+  rotacionPava: {x: -180, y: 0, z: 0}
+  escalaPava: {x: 0.03, y: 0.03, z: 0.03}
 --- !u!4 &765185032
 Transform:
   m_ObjectHideFlags: 0
