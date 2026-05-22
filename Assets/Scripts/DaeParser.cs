@@ -27,11 +27,11 @@ public static class DaeParser
         ns.AddNamespace("c", "http://www.collada.org/2005/11/COLLADASchema");
 
         // Listas finales que combinarán todos los submeshes
-        List<Vector3> finalVerts    = new List<Vector3>();
-        List<Vector3> finalNormals  = new List<Vector3>();
-        List<Vector2> finalUVs      = new List<Vector2>();
+        List<Vector3> finalVerts = new List<Vector3>();
+        List<Vector3> finalNormals = new List<Vector3>();
+        List<Vector2> finalUVs = new List<Vector2>();
         List<Vector4> finalTangents = new List<Vector4>();
-        List<int>     finalTris     = new List<int>();
+        List<int> finalTris = new List<int>();
 
         // Iterar sobre cada <geometry> en library_geometries
         XmlNodeList geometries = doc.SelectNodes("//c:library_geometries/c:geometry", ns);
@@ -68,10 +68,10 @@ public static class DaeParser
         // Unity por defecto limita a 65535 vértices; usamos 32-bit para modelos grandes
         mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
 
-        mesh.vertices  = finalVerts.ToArray();
-        mesh.normals   = finalNormals.Count == finalVerts.Count ? finalNormals.ToArray() : null;
-        mesh.uv        = finalUVs.Count    == finalVerts.Count ? finalUVs.ToArray()     : null;
-        mesh.tangents  = finalTangents.Count == finalVerts.Count ? finalTangents.ToArray() : null;
+        mesh.vertices = finalVerts.ToArray();
+        mesh.normals = finalNormals.Count == finalVerts.Count ? finalNormals.ToArray() : null;
+        mesh.uv = finalUVs.Count == finalVerts.Count ? finalUVs.ToArray() : null;
+        mesh.tangents = finalTangents.Count == finalVerts.Count ? finalTangents.ToArray() : null;
         mesh.triangles = finalTris.ToArray();
 
         if (finalNormals.Count != finalVerts.Count)
@@ -87,7 +87,7 @@ public static class DaeParser
     private static void ParseGeometry(
         XmlNode geo, XmlNamespaceManager ns, bool useNs,
         List<Vector3> outVerts, List<Vector3> outNormals,
-        List<Vector2> outUVs,   List<Vector4> outTangents,
+        List<Vector2> outUVs, List<Vector4> outTangents,
         List<int> outTris)
     {
         // Función helper para SelectSingleNode con o sin namespace
@@ -117,7 +117,7 @@ public static class DaeParser
 
             if (arr == null) continue;
 
-            string[] tokens = arr.InnerText.Split(new char[]{' ','\t','\r','\n'},
+            string[] tokens = arr.InnerText.Split(new char[] { ' ', '\t', '\r', '\n' },
                 System.StringSplitOptions.RemoveEmptyEntries);
 
             float[] floats = new float[tokens.Length];
@@ -179,7 +179,7 @@ public static class DaeParser
         XmlNode trisNode, XmlNamespaceManager ns, bool useNs,
         Dictionary<string, float[]> sources, string geoId,
         List<Vector3> outVerts, List<Vector3> outNormals,
-        List<Vector2> outUVs,   List<Vector4> outTangents,
+        List<Vector2> outUVs, List<Vector4> outTangents,
         List<int> outTris)
     {
         // Leer inputs y sus offsets
@@ -203,10 +203,10 @@ public static class DaeParser
         int stride = GetMaxOffset(posIn, normIn, uvIn, tangIn) + 1;
         int baseVertex = outVerts.Count;
 
-        float[] posArr  = GetSource(sources, posIn.source,  geoId, "POSITION");
-        float[] normArr = GetSource(sources, normIn.source,  geoId, "NORMAL");
-        float[] uvArr   = GetSource(sources, uvIn.source,    geoId, "TEXCOORD");
-        float[] tanArr  = GetSource(sources, tangIn.source,  geoId, "TANGENT");
+        float[] posArr = GetSource(sources, posIn.source, geoId, "POSITION");
+        float[] normArr = GetSource(sources, normIn.source, geoId, "NORMAL");
+        float[] uvArr = GetSource(sources, uvIn.source, geoId, "TEXCOORD");
+        float[] tanArr = GetSource(sources, tangIn.source, geoId, "TANGENT");
 
         int triCount = indices.Length / (stride * 3);
 
@@ -218,27 +218,27 @@ public static class DaeParser
 
                 // Posición — Swizzle RH Z-Up → LH Y-Up: (X, Z, -Y)
                 int pi = indices[idx + posIn.offset] * 3;
-                outVerts.Add(new Vector3(posArr[pi], posArr[pi+2], -posArr[pi+1]));
+                outVerts.Add(new Vector3(posArr[pi], posArr[pi + 2], -posArr[pi + 1]));
 
                 // Normal — Swizzle RH Z-Up → LH Y-Up: (X, Z, -Y)
                 if (normArr != null)
                 {
                     int ni = indices[idx + normIn.offset] * 3;
-                    outNormals.Add(new Vector3(normArr[ni], normArr[ni+2], -normArr[ni+1]));
+                    outNormals.Add(new Vector3(normArr[ni], normArr[ni + 2], -normArr[ni + 1]));
                 }
 
-                // UV (COLLADA: V invertida respecto a Unity)
+                // UV (COLLADA: Pasamos el dato crudo sin invertir)
                 if (uvArr != null)
                 {
                     int ui = indices[idx + uvIn.offset] * 2;
-                    outUVs.Add(new Vector2(uvArr[ui], 1f - uvArr[ui+1]));
+                    outUVs.Add(new Vector2(uvArr[ui], uvArr[ui + 1]));
                 }
 
                 // Tangente — Swizzle RH Z-Up → LH Y-Up: (X, Z, -Y)
                 if (tanArr != null)
                 {
                     int ti2 = indices[idx + tangIn.offset] * 3;
-                    outTangents.Add(new Vector4(tanArr[ti2], tanArr[ti2+2], -tanArr[ti2+1], 1f));
+                    outTangents.Add(new Vector4(tanArr[ti2], tanArr[ti2 + 2], -tanArr[ti2 + 1], 1f));
                 }
 
                 outTris.Add(baseVertex + (t * 3 + v));
@@ -261,7 +261,7 @@ public static class DaeParser
         XmlNode polyNode, XmlNamespaceManager ns, bool useNs,
         Dictionary<string, float[]> sources, string geoId,
         List<Vector3> outVerts, List<Vector3> outNormals,
-        List<Vector2> outUVs,   List<Vector4> outTangents,
+        List<Vector2> outUVs, List<Vector4> outTangents,
         List<int> outTris)
     {
         InputInfo posIn, normIn, uvIn, tangIn;
@@ -282,10 +282,10 @@ public static class DaeParser
         int[] indices = ParseIntArray(pNode.InnerText);
         int stride = GetMaxOffset(posIn, normIn, uvIn, tangIn) + 1;
 
-        float[] posArr  = GetSource(sources, posIn.source,  geoId, "POSITION");
-        float[] normArr = GetSource(sources, normIn.source,  geoId, "NORMAL");
-        float[] uvArr   = GetSource(sources, uvIn.source,    geoId, "TEXCOORD");
-        float[] tanArr  = GetSource(sources, tangIn.source,  geoId, "TANGENT");
+        float[] posArr = GetSource(sources, posIn.source, geoId, "POSITION");
+        float[] normArr = GetSource(sources, normIn.source, geoId, "NORMAL");
+        float[] uvArr = GetSource(sources, uvIn.source, geoId, "TEXCOORD");
+        float[] tanArr = GetSource(sources, tangIn.source, geoId, "TANGENT");
 
         int indexCursor = 0;
 
@@ -299,24 +299,25 @@ public static class DaeParser
                 int idx = (indexCursor + v) * stride;
 
                 int pi = indices[idx + posIn.offset] * 3;
-                outVerts.Add(new Vector3(posArr[pi], posArr[pi+2], -posArr[pi+1]));
+                outVerts.Add(new Vector3(posArr[pi], posArr[pi + 2], -posArr[pi + 1]));
 
                 if (normArr != null)
                 {
                     int ni = indices[idx + normIn.offset] * 3;
-                    outNormals.Add(new Vector3(normArr[ni], normArr[ni+2], -normArr[ni+1]));
+                    outNormals.Add(new Vector3(normArr[ni], normArr[ni + 2], -normArr[ni + 1]));
                 }
 
+                // UV (COLLADA: Pasamos el dato crudo sin invertir)
                 if (uvArr != null)
                 {
                     int ui = indices[idx + uvIn.offset] * 2;
-                    outUVs.Add(new Vector2(uvArr[ui], 1f - uvArr[ui+1]));
+                    outUVs.Add(new Vector2(uvArr[ui], uvArr[ui + 1]));
                 }
 
                 if (tanArr != null)
                 {
                     int ti2 = indices[idx + tangIn.offset] * 3;
-                    outTangents.Add(new Vector4(tanArr[ti2], tanArr[ti2+2], -tanArr[ti2+1], 1f));
+                    outTangents.Add(new Vector4(tanArr[ti2], tanArr[ti2 + 2], -tanArr[ti2 + 1], 1f));
                 }
             }
 
@@ -339,16 +340,16 @@ public static class DaeParser
     private struct InputInfo
     {
         public string source;
-        public int    offset;
+        public int offset;
     }
 
     private static void ReadInputs(XmlNode parent, XmlNamespaceManager ns, bool useNs,
         out InputInfo pos, out InputInfo norm, out InputInfo uv, out InputInfo tan)
     {
-        pos  = new InputInfo { source = null, offset = 0 };
+        pos = new InputInfo { source = null, offset = 0 };
         norm = new InputInfo { source = null, offset = 0 };
-        uv   = new InputInfo { source = null, offset = 0 };
-        tan  = new InputInfo { source = null, offset = 0 };
+        uv = new InputInfo { source = null, offset = 0 };
+        tan = new InputInfo { source = null, offset = 0 };
 
         XmlNodeList inputs = useNs
             ? parent.SelectNodes("c:input", ns)
@@ -356,18 +357,18 @@ public static class DaeParser
 
         foreach (XmlNode inp in inputs)
         {
-            string sem    = inp.Attributes["semantic"]?.Value;
-            string src    = inp.Attributes["source"]?.Value;
-            int    offset = 0;
+            string sem = inp.Attributes["semantic"]?.Value;
+            string src = inp.Attributes["source"]?.Value;
+            int offset = 0;
             int.TryParse(inp.Attributes["offset"]?.Value, out offset);
 
             switch (sem)
             {
-                case "VERTEX":   pos  = new InputInfo { source = src, offset = offset }; break;
-                case "POSITION": pos  = new InputInfo { source = src, offset = offset }; break;
-                case "NORMAL":   norm = new InputInfo { source = src, offset = offset }; break;
-                case "TEXCOORD": uv   = new InputInfo { source = src, offset = offset }; break;
-                case "TANGENT":  tan  = new InputInfo { source = src, offset = offset }; break;
+                case "VERTEX": pos = new InputInfo { source = src, offset = offset }; break;
+                case "POSITION": pos = new InputInfo { source = src, offset = offset }; break;
+                case "NORMAL": norm = new InputInfo { source = src, offset = offset }; break;
+                case "TEXCOORD": uv = new InputInfo { source = src, offset = offset }; break;
+                case "TANGENT": tan = new InputInfo { source = src, offset = offset }; break;
             }
         }
     }
@@ -393,15 +394,15 @@ public static class DaeParser
 
     private static int[] ParseIntArray(string text)
     {
-        string[] tokens = text.Split(new char[]{' ','\t','\r','\n'},
+        string[] tokens = text.Split(new char[] { ' ', '\t', '\r', '\n' },
             System.StringSplitOptions.RemoveEmptyEntries);
         int[] arr = new int[tokens.Length];
         for (int i = 0; i < tokens.Length; i++)
             arr[i] = int.Parse(tokens[i], CultureInfo.InvariantCulture);
         return arr;
     }
-	
-	private static void CentrarVertices(List<Vector3> vertices)
+
+    private static void CentrarVertices(List<Vector3> vertices)
     {
         if (vertices.Count == 0) return;
 

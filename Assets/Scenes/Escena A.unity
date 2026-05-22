@@ -204,11 +204,18 @@ MonoBehaviour:
   colorSpot: {r: 0, g: 1, b: 1, a: 1}
   intensidadSpotInicial: 1.5
   radioSpotInicial: 10
-  aperturaSpotInicial: 30
-  shaderActividad11: {fileID: 4800000, guid: 3ebff6d5d2154684bbcfa11512d32ce0, type: 3}
+  aperturaSpotInicial: 29.198095
+  shaderPiso: {fileID: 4800000, guid: 3ebff6d5d2154684bbcfa11512d32ce0, type: 3}
   texturaPiso: {fileID: 2800000, guid: 1ae634e87d719b54895913d4dc0ba1fb, type: 3}
+  texturaProceduralPiso: {fileID: 0}
+  mapaDeNormalesPiso: {fileID: 0}
+  colorDefectoPiso: {r: 1, g: 1, b: 1, a: 1}
   nombreArchivoObj: piso.obj
+  shaderPava: {fileID: 4800000, guid: 9079bd638994a604cb59a2970b9392c0, type: 3}
   texturaPava: {fileID: 2800000, guid: beba6a0fadac31349b9050099f1d0991, type: 3}
+  texturaProceduralPava: {fileID: 0}
+  mapaDeNormalesPava: {fileID: 2800000, guid: 6d72cc7d37f17f544954b58696ebe242, type: 3}
+  colorDefectoPava: {r: 0.8, g: 0.8, b: 0.8, a: 1}
   nombreArchivoDae: base_model.dae
   posicionPava: {x: 0, y: 0, z: 0}
   rotacionPava: {x: -180, y: 0, z: 0}

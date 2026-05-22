@@ -1,20 +1,23 @@
 using UnityEngine;
 using System.IO;
 
+// Heredamos de la clase abstracta
 public class SceneManagerEscenaA : SceneManagerBase
 {
     [Header("Configuración Específica Escena A - Piso")]
-    public Shader shaderActividad11;
-    public Texture2D texturaPiso;
+    public Shader shaderPiso;
+    public Texture2D texturaPiso; // 1. PNG Clásico
+    public TexturaProcedural texturaProceduralPiso; // 2. Generador Matemático
     public Texture2D mapaDeNormalesPiso;
-    public Color colorDefectoPiso = Color.white;
+    public Color colorDefectoPiso = Color.white; // 3. Color Sólido
     public string nombreArchivoObj = "piso.obj";
 
     [Header("Configuración Específica Escena A - Pava")]
     public Shader shaderPava;
-    public Texture2D texturaPava;
+    public Texture2D texturaPava; // 1. PNG Clásico
+    public TexturaProcedural texturaProceduralPava; // 2. Generador Matemático
     public Texture2D mapaDeNormalesPava;
-    public Color colorDefectoPava = new Color(0.8f, 0.8f, 0.8f, 1f);
+    public Color colorDefectoPava = new Color(0.8f, 0.8f, 0.8f, 1f); // 3. Color Sólido
     public string nombreArchivoDae = "base_model.dae";
 
     // --- VARIABLES DE TRANSFORMACIÓN ---
@@ -24,7 +27,7 @@ public class SceneManagerEscenaA : SceneManagerBase
 
     protected override void ConstruirEscena()
     {
-        if (shaderActividad11 == null)
+        if (shaderPiso == null)
         {
             Debug.LogError("Falta asignar el Shader del Piso en Escena A.");
             return;
@@ -44,17 +47,32 @@ public class SceneManagerEscenaA : SceneManagerBase
             pisoObj.AddComponent<MeshFilter>().mesh = meshPiso;
             pisoObj.AddComponent<ModelMatrix>();
 
-            Material matPiso = new Material(shaderActividad11);
+            Material matPiso = new Material(shaderPiso);
 
-            // --- GESTIÓN EXCLUSIVA DE COLOR VS TEXTURA ---
+            // --- LÓGICA DE TEXTURAS (JERARQUÍA) ---
+            Texture2D texturaFinalPiso = null;
+
             if (texturaPiso != null)
             {
-                matPiso.SetTexture("_MainTex", texturaPiso);
-                matPiso.SetColor("_MatColor", Color.white); // Forzado a blanco para usar la textura pura
+                texturaFinalPiso = texturaPiso; // Gana el PNG
+            }
+            else if (texturaProceduralPiso != null)
+            {
+                // Si no hay PNG, ejecuta la matemática y crea la textura en RAM
+                texturaFinalPiso = texturaProceduralPiso.GenerarTexturaEnMemoria();
+            }
+
+            // Inyectamos lo que haya ganado al Shader
+            if (texturaFinalPiso != null)
+            {
+                matPiso.SetTexture("_MainTex", texturaFinalPiso);
+                matPiso.SetColor("_MatColor", Color.white); // Blanco puro para no teñir la imagen
+                if (matPiso.HasProperty("_UseTexture")) matPiso.SetFloat("_UseTexture", 1f);
             }
             else
             {
-                matPiso.SetColor("_MatColor", colorDefectoPiso); // Si no hay archivo, aplica el color plano del Inspector
+                matPiso.SetColor("_MatColor", colorDefectoPiso); // Gana el color sólido
+                if (matPiso.HasProperty("_UseTexture")) matPiso.SetFloat("_UseTexture", 0f);
             }
 
             // Normales
@@ -97,18 +115,33 @@ public class SceneManagerEscenaA : SceneManagerBase
             pavaObj.AddComponent<MeshFilter>().mesh = meshPava;
             pavaObj.AddComponent<ModelMatrix>();
 
-            Shader shaderAUsar = shaderPava != null ? shaderPava : shaderActividad11;
+            Shader shaderAUsar = shaderPava != null ? shaderPava : shaderPiso;
             Material matPava = new Material(shaderAUsar);
 
-            // --- GESTIÓN EXCLUSIVA DE COLOR VS TEXTURA ---
+            // --- LÓGICA DE TEXTURAS (JERARQUÍA) ---
+            Texture2D texturaFinalPava = null;
+
             if (texturaPava != null)
             {
-                matPava.SetTexture("_MainTex", texturaPava);
-                matPava.SetColor("_MatColor", Color.white); // Forzado a blanco para usar la textura pura
+                texturaFinalPava = texturaPava; // Gana el PNG
+            }
+            else if (texturaProceduralPava != null)
+            {
+                // Si no hay PNG, ejecuta la matemática y crea la textura en RAM
+                texturaFinalPava = texturaProceduralPava.GenerarTexturaEnMemoria();
+            }
+
+            // Inyectamos lo que haya ganado al Shader
+            if (texturaFinalPava != null)
+            {
+                matPava.SetTexture("_MainTex", texturaFinalPava);
+                matPava.SetColor("_MatColor", Color.white); // Blanco puro para no teñir la imagen
+                if (matPava.HasProperty("_UseTexture")) matPava.SetFloat("_UseTexture", 1f);
             }
             else
             {
-                matPava.SetColor("_MatColor", colorDefectoPava); // Si no hay archivo, aplica el color plano del Inspector
+                matPava.SetColor("_MatColor", colorDefectoPava); // Gana el color sólido
+                if (matPava.HasProperty("_UseTexture")) matPava.SetFloat("_UseTexture", 0f);
             }
 
             // Normales

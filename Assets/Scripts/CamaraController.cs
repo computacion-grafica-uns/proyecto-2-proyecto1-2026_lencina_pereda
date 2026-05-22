@@ -119,7 +119,7 @@ public class CamaraController : MonoBehaviour
         pitch += Input.GetAxis("Mouse Y") * 3f;
         pitch  = Mathf.Clamp(pitch, -89f, 89f);
 
-        if (Input.GetKey(KeyCode.D)) yaw   += rotationSpeed * Time.deltaTime;
+        if (Input.GetKey(KeyCode.T)) yaw   += rotationSpeed * Time.deltaTime;
         if (Input.GetKey(KeyCode.A)) yaw   -= rotationSpeed * Time.deltaTime;
 
         Vector3 dir = new Vector3(
