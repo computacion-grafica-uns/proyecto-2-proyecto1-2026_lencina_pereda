@@ -36,7 +36,7 @@ public class CamaraController : MonoBehaviour
         ActualizarTodo();
     }
 
-    void Start()
+    void Awake()
     {
         viewMath     = GetComponent<ViewMatrix>();
         sceneManager = Object.FindFirstObjectByType<SceneManagerBase>(); // ← busca cualquier hijo
@@ -152,8 +152,11 @@ public class CamaraController : MonoBehaviour
 
     void ActualizarTodo()
     {
+        // 1. Guardas defensivas unificadas
         if (sceneManager == null || viewMath == null) return;
+        if (sceneManager.objetosEscena == null || sceneManager.objetosEscena.Count == 0) return;
 
+        // 2. Cálculo de Matrices (Una sola vez)
         ProjectionMatrix projMath = GetComponent<ProjectionMatrix>();
         if (projMath == null) projMath = gameObject.AddComponent<ProjectionMatrix>();
 
@@ -162,25 +165,38 @@ public class CamaraController : MonoBehaviour
         Matrix4x4 pMatGPU = GL.GetGPUProjectionMatrix(pMatRaw, true);
         Matrix4x4 vMat    = viewMath.CreateViewMatrix(eye, target, Vector3.up);
 
+        // =========================================================
+        // EL FIX: SINCRONIZACIÓN FÍSICA DE LA CÁMARA NATIVA
+        // Obligamos al Transform de Unity a seguir a nuestra matemática
+        // =========================================================
+        transform.position = eye;
+        transform.LookAt(target);
+		
+        // 3. Inyección de datos a la GPU
         foreach (GameObject obj in sceneManager.objetosEscena)
         {
             if (obj == null) continue;
-            Renderer  r  = obj.GetComponent<Renderer>();
-            ModelMatrix mm = obj.GetComponent<ModelMatrix>();
+            
+            // Recuperamos el barrido de jerarquías para que no ignore la casa
+            Renderer[] renderers = obj.GetComponentsInChildren<Renderer>(true);
 
-            if (r != null)
+            foreach (Renderer r in renderers)
             {
-                r.material.SetMatrix("_ProjectionMatrix", pMatGPU);
-                r.material.SetMatrix("_ViewMatrix",       vMat);
-                r.material.SetVector("_CameraPos", new Vector4(eye.x, eye.y, eye.z, 1f));
+                if (r == null) continue;
 
-                if (mm != null)
+                // Recuperamos sharedMaterials para evitar la fuga masiva de memoria
+                Material[] mats = r.sharedMaterials;
+                
+                foreach (Material m in mats)
                 {
-                    Matrix4x4 mMat = mm.CreateModelMatrix(
-                        obj.transform.position,
-                        obj.transform.eulerAngles * Mathf.Deg2Rad,
-                        obj.transform.localScale);
-                    r.material.SetMatrix("_ModelMatrix", mMat);
+                    if (m == null) continue;
+                    
+                    m.SetMatrix("_ProjectionMatrix", pMatGPU);
+                    m.SetMatrix("_ViewMatrix",       vMat);
+                    m.SetVector("_CameraPos", new Vector4(eye.x, eye.y, eye.z, 1f));
+
+                    // Inyectamos la matriz local del sub-mesh específico
+                    m.SetMatrix("_ModelMatrix", r.transform.localToWorldMatrix);
                 }
             }
         }

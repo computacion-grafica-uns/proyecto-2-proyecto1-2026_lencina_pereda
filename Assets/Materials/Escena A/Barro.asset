@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f61c619719033a14ba7973569b6ff43e, type: 3}
   m_Name: Barro
   m_EditorClassIdentifier: 
-  colorTinte: {r: 1, g: 1, b: 1, a: 1}
+  colorTinte: {r: 0.41960785, g: 0.24313726, b: 0.14901961, a: 1}
   colorEspecular: {r: 0.050980393, g: 0.050980393, b: 0.050980393, a: 1}
   shininess: 4
   opacidad: 1

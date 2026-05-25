@@ -16,12 +16,16 @@ Shader "Custom/ShaderSuperToon"
 
         // Interruptor C#
         _UseTexture ("Usa Textura Base (0 o 1)", Float) = 1
+		
+		_Opacidad ("Opacidad", Range(0,1)) = 1.0
+        [HideInInspector] _SrcBlend ("_SrcBlend", Float) = 1.0
+        [HideInInspector] _DstBlend ("_DstBlend", Float) = 0.0
+        [HideInInspector] _ZWrite ("_ZWrite", Float) = 1.0
     }
     SubShader {
-        // --- CORRECCIÓN DE OPACIDAD ---
-        Tags { "Queue"="Geometry" "RenderType"="Opaque" }
-        Blend Off 
-        ZWrite On 
+		
+		Blend [_SrcBlend] [_DstBlend] 
+        ZWrite [_ZWrite] 
         Cull Back
 
         Pass {
@@ -47,6 +51,8 @@ Shader "Custom/ShaderSuperToon"
             sampler2D _MainTex; float4 _MatColor; float4 _SpecColor;
             float _LuzUmbral; float _BrilloUmbral; float _Shininess;
             float _OutlineGrosor; float4 _OutlineColor; float _UseTexture;
+			
+			float _Opacidad;
 
             float _DirLightActive; float _PointLightActive; float _SpotLightActive;
             float _DirIntensity; float _PointIntensity; float _SpotIntensity;
@@ -69,7 +75,8 @@ Shader "Custom/ShaderSuperToon"
                 // Selector de Textura / Color Plano
                 float4 albedo = _MatColor;
                 if (_UseTexture > 0.5) {
-                    albedo = tex2D(_MainTex, i.uv);
+                    // Ahora la textura se tiñe con el color básico del material
+                    albedo = tex2D(_MainTex, i.uv) * _MatColor; 
                 }
 
                 float3 N = normalize(i.viewNormal);
@@ -131,9 +138,9 @@ Shader "Custom/ShaderSuperToon"
                     }
                 }
 
-                // Luz ambiental y opacidad forzada a 1.0
+                // Luz ambiental 
                 float3 ambient = albedo.rgb * 0.1;
-                return float4(ambient + colorDifusoFinal + colorEspecularFinal, 1.0);
+                return float4(ambient + colorDifusoFinal + colorEspecularFinal, _Opacidad);
             }
             ENDCG
         }

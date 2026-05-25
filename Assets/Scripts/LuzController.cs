@@ -52,7 +52,7 @@ public class LuzController : MonoBehaviour
         aperturaAngulo       = manager.aperturaSpotInicial;
     }
 
-    void Start()
+    void Awake()
     {
         modelMatrix  = GetComponent<ModelMatrix>();
         sceneManager = Object.FindFirstObjectByType<SceneManagerBase>(); // ← busca cualquier hijo
@@ -103,26 +103,32 @@ public class LuzController : MonoBehaviour
             Renderer rend = obj.GetComponentInChildren<Renderer>();
             if (rend == null) continue;
 
-            rend.material.SetFloat("_DirLightActive",   dirActiva     ? 1f : 0f);
-            rend.material.SetFloat("_PointLightActive", puntualActiva ? 1f : 0f);
-            rend.material.SetFloat("_SpotLightActive",  spotActiva    ? 1f : 0f);
+            // Extraemos TODOS los materiales para iluminarlos
+            Material[] mats = rend.materials;
 
-            rend.material.SetFloat("_DirIntensity",   intensidadDir);
-            rend.material.SetFloat("_PointIntensity", intensidadPuntual);
-            rend.material.SetFloat("_SpotIntensity",  intensidadSpot);
+            foreach (Material m in mats)
+            {
+                m.SetFloat("_DirLightActive",   dirActiva     ? 1f : 0f);
+                m.SetFloat("_PointLightActive", puntualActiva ? 1f : 0f);
+                m.SetFloat("_SpotLightActive",  spotActiva    ? 1f : 0f);
 
-            rend.material.SetVector("_LightDirWorld",  dirMundo);
-            rend.material.SetVector("_LightPosWorld",  posPuntualMundo);
-            rend.material.SetVector("_SpotPosWorld",   posSpotMundo);
-            rend.material.SetVector("_SpotDirWorld",   dirSpotMundo);
+                m.SetFloat("_DirIntensity",   intensidadDir);
+                m.SetFloat("_PointIntensity", intensidadPuntual);
+                m.SetFloat("_SpotIntensity",  intensidadSpot);
 
-            rend.material.SetColor("_DirLightColor",   dirColor);
-            rend.material.SetColor("_PointLightColor", puntualColor);
-            rend.material.SetColor("_SpotLightColor",  spotColor);
+                m.SetVector("_LightDirWorld",  dirMundo);
+                m.SetVector("_LightPosWorld",  posPuntualMundo);
+                m.SetVector("_SpotPosWorld",   posSpotMundo);
+                m.SetVector("_SpotDirWorld",   dirSpotMundo);
 
-            rend.material.SetFloat("_PointLightRadius", radioPuntual);
-            rend.material.SetFloat("_SpotLightRadius",  radioSpot);
-            rend.material.SetFloat("_Apertura",         aperturaAngulo);
+                m.SetColor("_DirLightColor",   dirColor);
+                m.SetColor("_PointLightColor", puntualColor);
+                m.SetColor("_SpotLightColor",  spotColor);
+
+                m.SetFloat("_PointLightRadius", radioPuntual);
+                m.SetFloat("_SpotLightRadius",  radioSpot);
+                m.SetFloat("_Apertura",         aperturaAngulo);
+            }
         }
     }
 }

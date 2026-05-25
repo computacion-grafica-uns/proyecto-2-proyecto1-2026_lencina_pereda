@@ -12,12 +12,16 @@ Shader "Custom/ShaderCookTorrance"
         // Interruptores C#
         _UseTexture ("Usa Textura Base (0 o 1)", Float) = 1
         _UseNormalMap ("Usa Mapa de Normales (0 o 1)", Float) = 0
+		
+		_Opacidad ("Opacidad", Range(0,1)) = 1.0
+        [HideInInspector] _SrcBlend ("_SrcBlend", Float) = 1.0
+        [HideInInspector] _DstBlend ("_DstBlend", Float) = 0.0
+        [HideInInspector] _ZWrite ("_ZWrite", Float) = 1.0
     }
     SubShader {
-        // --- CORRECCIÓN DE OPACIDAD ---
-        Tags { "Queue"="Geometry" "RenderType"="Opaque" }
-        Blend Off 
-        ZWrite On 
+	
+        Blend [_SrcBlend] [_DstBlend] 
+        ZWrite [_ZWrite] 
         Cull Back
 
         Pass {
@@ -45,7 +49,9 @@ Shader "Custom/ShaderCookTorrance"
             sampler2D _MainTex; sampler2D _NormalMap;
             float4 _MatColor; float _Roughness; float _Metallic;
             float _UseNormalMap; float _UseTexture;
-
+			
+			float _Opacidad;
+			
             float _DirLightActive; float _PointLightActive; float _SpotLightActive;
             float _DirIntensity; float _PointIntensity; float _SpotIntensity;
             float4 _LightPosWorld; float4 _SpotPosWorld; float4 _LightDirWorld; float4 _SpotDirWorld; 
@@ -109,9 +115,10 @@ Shader "Custom/ShaderCookTorrance"
 
             fixed4 frag (v2f i) : SV_Target {
                 // Selector de Textura / Color Plano
-                float4 albedo = _MatColor;
+				float4 albedo = _MatColor;
                 if (_UseTexture > 0.5) {
-                    albedo = tex2D(_MainTex, i.uv);
+                    // Ahora la textura se tiñe con el color básico del material
+                    albedo = tex2D(_MainTex, i.uv) * _MatColor; 
                 }
 
                 // Cálculo de Normales (Relieve)
@@ -189,9 +196,9 @@ Shader "Custom/ShaderCookTorrance"
                     }
                 }
 
-                // Sumamos la ambiental base y forzamos el canal Alpha a 1.0
+                // Sumamos la ambiental base
                 float3 ambient = albedo.rgb * 0.1;
-                return float4(ambient + totalRadiance, 1.0);
+                return float4(ambient + totalRadiance, _Opacidad);
             }
             ENDCG
         }

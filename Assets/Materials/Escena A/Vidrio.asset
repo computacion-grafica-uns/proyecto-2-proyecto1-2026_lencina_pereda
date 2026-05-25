@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f61c619719033a14ba7973569b6ff43e, type: 3}
   m_Name: Vidrio
   m_EditorClassIdentifier: 
-  colorTinte: {r: 1, g: 1, b: 1, a: 1}
+  colorTinte: {r: 0.8784314, g: 0.96862745, b: 0.98039216, a: 1}
   colorEspecular: {r: 1, g: 1, b: 1, a: 1}
   shininess: 128
-  opacidad: 0.25
+  opacidad: 0.7
   rugosidadPBR: 0.05
   metalicidadPBR: 0

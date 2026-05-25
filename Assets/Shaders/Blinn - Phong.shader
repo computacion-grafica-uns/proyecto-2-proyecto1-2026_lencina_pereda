@@ -10,15 +10,18 @@ Shader "Custom/ShaderBlinn-Phong"
         // Interruptores C#
         _UseTexture ("Usa Textura Base (0 o 1)", Float) = 1
         _UseNormalMap ("Usa Mapa de Normales (0 o 1)", Float) = 0
+		
+		_Opacidad ("Opacidad", Range(0,1)) = 1.0
+        [HideInInspector] _SrcBlend ("_SrcBlend", Float) = 1.0
+        [HideInInspector] _DstBlend ("_DstBlend", Float) = 0.0
+        [HideInInspector] _ZWrite ("_ZWrite", Float) = 1.0
     }
     SubShader {
-        // ==========================================================
-        // VOLVEMOS A LA ESTABILIDAD DE LA ACTIVIDAD 11 (OPACO)
-        // ==========================================================
-        Tags { "Queue"="Geometry" "RenderType"="Opaque" }
-        Blend Off 
-        ZWrite On 
-        Cull Back // Restaura el culling normal para evitar fallos de profundidad
+	
+        // La Queue la sobreescribe C#, usamos estas variables para la mezcla
+        Blend [_SrcBlend] [_DstBlend]
+        ZWrite [_ZWrite]
+        Cull Back
 
         Pass {
             CGPROGRAM
@@ -45,7 +48,9 @@ Shader "Custom/ShaderBlinn-Phong"
             sampler2D _MainTex; sampler2D _NormalMap;
             float4 _MatColor; float4 _SpecColor; 
             float _Shininess; float _UseNormalMap; float _UseTexture;
-
+			
+			float _Opacidad; // Declaramos la variable para que el código matemático pueda leerla
+			
             float _DirLightActive; float _PointLightActive; float _SpotLightActive;
             float _DirIntensity; float _PointIntensity; float _SpotIntensity;
             float4 _LightPosWorld; float4 _SpotPosWorld; float4 _LightDirWorld; float4 _SpotDirWorld;
@@ -79,9 +84,10 @@ Shader "Custom/ShaderBlinn-Phong"
             fixed4 frag (v2f i) : SV_Target {
                 
                 // --- AISLAMIENTO DE COLOR VS TEXTURA ---
-                float4 albedo = _MatColor;
+				float4 albedo = _MatColor;
                 if (_UseTexture > 0.5) {
-                    albedo = tex2D(_MainTex, i.uv);
+                    // Ahora la textura se tiñe con el color básico del material
+                    albedo = tex2D(_MainTex, i.uv) * _MatColor; 
                 }
 
                 float3 N = normalize(i.viewNormal);
@@ -169,8 +175,7 @@ Shader "Custom/ShaderBlinn-Phong"
                     }
                 }
 
-                // Forzamos Opacidad Total (1.0) para anular comportamientos fantasmas
-                return float4(ambient + totalDiffuse + totalSpecular, 1.0);
+                return float4(ambient + totalDiffuse + totalSpecular, _Opacidad);
             }
             ENDCG
         }
