@@ -211,15 +211,102 @@ MonoBehaviour:
   mapaDeNormalesPiso: {fileID: 0}
   materialPiso: {fileID: 11400000, guid: 2badfb3267e7f1449807cd9715f618d6, type: 2}
   nombreArchivoObj: piso.obj
-  shaderPava: {fileID: 4800000, guid: 0548a6ce415885a4e8b2c58ce73d8937, type: 3}
-  texturaPava: {fileID: 0}
-  texturaProceduralPava: {fileID: 11400000, guid: ddc228e46e7b4ff459aeb8bba9e88da9, type: 2}
-  mapaDeNormalesPava: {fileID: 2800000, guid: 6d72cc7d37f17f544954b58696ebe242, type: 3}
-  materialPava: {fileID: 11400000, guid: 97f3e4f371d71744b9419de5e69f449b, type: 2}
   nombreArchivoDae: base_model.dae
-  posicionPava: {x: 0, y: 0, z: 0}
-  rotacionPava: {x: -180, y: 0, z: 0}
-  escalaPava: {x: 0.03, y: 0.03, z: 0.03}
+  shadersPavas:
+  - {fileID: 4800000, guid: 3ebff6d5d2154684bbcfa11512d32ce0, type: 3}
+  - {fileID: 4800000, guid: 9079bd638994a604cb59a2970b9392c0, type: 3}
+  - {fileID: 4800000, guid: 3ebff6d5d2154684bbcfa11512d32ce0, type: 3}
+  - {fileID: 4800000, guid: 3ebff6d5d2154684bbcfa11512d32ce0, type: 3}
+  - {fileID: 4800000, guid: 3ebff6d5d2154684bbcfa11512d32ce0, type: 3}
+  - {fileID: 4800000, guid: 0548a6ce415885a4e8b2c58ce73d8937, type: 3}
+  - {fileID: 4800000, guid: 3ebff6d5d2154684bbcfa11512d32ce0, type: 3}
+  - {fileID: 4800000, guid: 9079bd638994a604cb59a2970b9392c0, type: 3}
+  - {fileID: 4800000, guid: 3ebff6d5d2154684bbcfa11512d32ce0, type: 3}
+  - {fileID: 4800000, guid: 9079bd638994a604cb59a2970b9392c0, type: 3}
+  - {fileID: 4800000, guid: 0548a6ce415885a4e8b2c58ce73d8937, type: 3}
+  - {fileID: 4800000, guid: 3ebff6d5d2154684bbcfa11512d32ce0, type: 3}
+  - {fileID: 4800000, guid: 9079bd638994a604cb59a2970b9392c0, type: 3}
+  - {fileID: 4800000, guid: 0548a6ce415885a4e8b2c58ce73d8937, type: 3}
+  - {fileID: 4800000, guid: 0548a6ce415885a4e8b2c58ce73d8937, type: 3}
+  - {fileID: 4800000, guid: 3ebff6d5d2154684bbcfa11512d32ce0, type: 3}
+  - {fileID: 4800000, guid: 9079bd638994a604cb59a2970b9392c0, type: 3}
+  - {fileID: 4800000, guid: 3ebff6d5d2154684bbcfa11512d32ce0, type: 3}
+  texturasPavas:
+  - {fileID: 0}
+  - {fileID: 2800000, guid: 7ffba94e2ab115748b00fdeb1d5857b3, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 2800000, guid: beba6a0fadac31349b9050099f1d0991, type: 3}
+  - {fileID: 0}
+  - {fileID: 2800000, guid: 923733db42bef32489fc65c284351cee, type: 3}
+  - {fileID: 2800000, guid: 8f0f8e9991528f740a812db0cd678602, type: 3}
+  - {fileID: 10300, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2800000, guid: 29decb2a6e253824b9ba48a8c00595bd, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 2800000, guid: 923733db42bef32489fc65c284351cee, type: 3}
+  - {fileID: 2800000, guid: 1767fd1abcba1f346ae1e02f95485d7c, type: 3}
+  - {fileID: 2800000, guid: 1ae634e87d719b54895913d4dc0ba1fb, type: 3}
+  - {fileID: 2800000, guid: 951c50a6cf8110d419e08049e00308c8, type: 3}
+  - {fileID: 2800000, guid: c79b69e9b71ee1847984c0a3a7e44d4f, type: 3}
+  texturasProceduralesPavas:
+  - {fileID: 11400000, guid: ddc228e46e7b4ff459aeb8bba9e88da9, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 11400000, guid: ddc228e46e7b4ff459aeb8bba9e88da9, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 11400000, guid: ddc228e46e7b4ff459aeb8bba9e88da9, type: 2}
+  - {fileID: 11400000, guid: ddc228e46e7b4ff459aeb8bba9e88da9, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  mapasDeNormalesPavas:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 2800000, guid: 6d72cc7d37f17f544954b58696ebe242, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 2800000, guid: 6d72cc7d37f17f544954b58696ebe242, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 2800000, guid: 6d72cc7d37f17f544954b58696ebe242, type: 3}
+  - {fileID: 2800000, guid: 6d72cc7d37f17f544954b58696ebe242, type: 3}
+  - {fileID: 2800000, guid: 6d72cc7d37f17f544954b58696ebe242, type: 3}
+  - {fileID: 2800000, guid: 6d72cc7d37f17f544954b58696ebe242, type: 3}
+  - {fileID: 2800000, guid: 6d72cc7d37f17f544954b58696ebe242, type: 3}
+  - {fileID: 2800000, guid: 6d72cc7d37f17f544954b58696ebe242, type: 3}
+  - {fileID: 0}
+  materialesPavas:
+  - {fileID: 11400000, guid: 2badfb3267e7f1449807cd9715f618d6, type: 2}
+  - {fileID: 11400000, guid: 2f4cbe4be8024cc408c011ffa81b09b6, type: 2}
+  - {fileID: 11400000, guid: 2f4cbe4be8024cc408c011ffa81b09b6, type: 2}
+  - {fileID: 11400000, guid: 2badfb3267e7f1449807cd9715f618d6, type: 2}
+  - {fileID: 11400000, guid: 2badfb3267e7f1449807cd9715f618d6, type: 2}
+  - {fileID: 11400000, guid: 2badfb3267e7f1449807cd9715f618d6, type: 2}
+  - {fileID: 11400000, guid: 97f3e4f371d71744b9419de5e69f449b, type: 2}
+  - {fileID: 11400000, guid: 97f3e4f371d71744b9419de5e69f449b, type: 2}
+  - {fileID: 11400000, guid: 2f4cbe4be8024cc408c011ffa81b09b6, type: 2}
+  - {fileID: 11400000, guid: 2f4cbe4be8024cc408c011ffa81b09b6, type: 2}
+  - {fileID: 11400000, guid: 97f3e4f371d71744b9419de5e69f449b, type: 2}
+  - {fileID: 11400000, guid: 2f4cbe4be8024cc408c011ffa81b09b6, type: 2}
+  - {fileID: 11400000, guid: 97f3e4f371d71744b9419de5e69f449b, type: 2}
+  - {fileID: 11400000, guid: 97f3e4f371d71744b9419de5e69f449b, type: 2}
+  - {fileID: 11400000, guid: 2badfb3267e7f1449807cd9715f618d6, type: 2}
+  - {fileID: 11400000, guid: 2badfb3267e7f1449807cd9715f618d6, type: 2}
+  - {fileID: 11400000, guid: 2f4cbe4be8024cc408c011ffa81b09b6, type: 2}
+  - {fileID: 11400000, guid: 2badfb3267e7f1449807cd9715f618d6, type: 2}
 --- !u!4 &765185032
 Transform:
   m_ObjectHideFlags: 0

@@ -11,17 +11,18 @@ public class SceneManagerEscenaA : SceneManagerBase
     public DatosMaterial materialPiso; 
     public string nombreArchivoObj = "piso.obj";
 
-    [Header("Configuración Específica Escena A - Pava")]
-    public Shader shaderPava;
-    public Texture2D texturaPava; 
-    public TexturaProcedural texturaProceduralPava; 
-    public Texture2D mapaDeNormalesPava;
-    public DatosMaterial materialPava; 
+    [Header("Configuración Específica Escena A - 18 Pavas")]
     public string nombreArchivoDae = "base_model.dae";
 
-    public Vector3 posicionPava = new Vector3(0f, 0f, 0f); 
-    public Vector3 rotacionPava = new Vector3(0f, 0f, 0f);
-    public Vector3 escalaPava = new Vector3(0.03f, 0.03f, 0.03f);
+    public Shader[] shadersPavas = new Shader[18];
+    public Texture2D[] texturasPavas = new Texture2D[18];
+    public TexturaProcedural[] texturasProceduralesPavas = new TexturaProcedural[18];
+    public Texture2D[] mapasDeNormalesPavas = new Texture2D[18];
+    public DatosMaterial[] materialesPavas = new DatosMaterial[18];
+
+    private Vector3 posicionPava = new Vector3(0f, 0f, 0f); 
+    private Vector3 rotacionPava = new Vector3(0f, 0f, 0f);
+    private Vector3 escalaPava = new Vector3(0.03f, 0.03f, 0.03f);
 
     protected override void ConstruirEscena()
     {
@@ -44,29 +45,60 @@ public class SceneManagerEscenaA : SceneManagerBase
             objetosEscena.Add(pisoObj);
         }
 
-        // 2. CARGA DE LA PAVA
+        // 2. CARGA DE LAS 18 PAVAS
         string rutaPava = Path.Combine(Application.dataPath, "Models/Escena A", nombreArchivoDae);
+        // Parseamos la malla una sola vez por rendimiento
         Mesh meshPava = File.Exists(rutaPava) ? DaeParser.Parse(rutaPava) : null;
 
         if (meshPava != null)
         {
-            GameObject pavaObj = new GameObject("Pava_EscenaA");
-            pavaObj.transform.SetParent(this.transform);
-			
-			escalaPava = new Vector3(0.03f, 0.03f, 0.03f);
-            posicionPava = new Vector3(0f, 0.7f, 0f);
-            rotacionPava = new Vector3(90f, 0f, 0f);
-			
-            pavaObj.transform.position = posicionPava;
-            pavaObj.transform.eulerAngles = rotacionPava;
-            pavaObj.transform.localScale = escalaPava;
-            pavaObj.AddComponent<MeshFilter>().mesh = meshPava;
-            pavaObj.AddComponent<ModelMatrix>();
+            // Parámetros físicos harcodeados internamente para limpiar el Inspector
+            Vector3 escalaPava = new Vector3(0.03f, 0.03f, 0.03f);
+            Vector3 rotacionPava = new Vector3(90f, 0f, 0f);
+            float alturaBase = 0.7f;
 
-            Material matPava = new Material(shaderPava != null ? shaderPava : shaderPiso);
-            AplicarMaterialDinamico(matPava, materialPava, texturaPava, texturaProceduralPava, mapaDeNormalesPava);
-            pavaObj.AddComponent<MeshRenderer>().material = matPava;
-            objetosEscena.Add(pavaObj);
+            for (int i = 0; i < 18; i++)
+            {
+                int col = i % 6;
+                int fila = i / 6;
+
+                // Grilla centrada exactamente en el origen (0,0)
+                // X (Columnas): -2.5, -1.5, -0.5, 0.5, 1.5, 2.5
+                // Z (Filas): -1.25 (Detrás), 0.0 (Medio), 1.25 (Adelante)
+                float posX = -2.5f + (col * 1.0f);
+                float posZ = -1.25f + (fila * 1.25f);
+                
+                Vector3 posicionIndividual = new Vector3(posX, alturaBase, posZ);
+
+                GameObject pavaObj = new GameObject($"Pava_EscenaA_{i}");
+                pavaObj.transform.SetParent(this.transform);
+                
+                pavaObj.transform.localPosition = posicionIndividual;
+                pavaObj.transform.localEulerAngles = rotacionPava;
+                pavaObj.transform.localScale = escalaPava;
+                
+                // Reutilizamos la misma malla parseada para ahorrar RAM
+                pavaObj.AddComponent<MeshFilter>().mesh = meshPava;
+                pavaObj.AddComponent<ModelMatrix>();
+
+                // Extracción segura del Inspector para esta pava en específico
+                Shader shaderActual = (shadersPavas != null && i < shadersPavas.Length && shadersPavas[i] != null) ? shadersPavas[i] : shaderPiso;
+                DatosMaterial datosActual = (materialesPavas != null && i < materialesPavas.Length) ? materialesPavas[i] : null;
+                Texture2D texActual = (texturasPavas != null && i < texturasPavas.Length) ? texturasPavas[i] : null;
+                TexturaProcedural procActual = (texturasProceduralesPavas != null && i < texturasProceduralesPavas.Length) ? texturasProceduralesPavas[i] : null;
+                Texture2D normalActual = (mapasDeNormalesPavas != null && i < mapasDeNormalesPavas.Length) ? mapasDeNormalesPavas[i] : null;
+
+                // Creación de material aislado en memoria de video
+                Material matPava = new Material(shaderActual);
+                
+                if (datosActual != null)
+                {
+                    AplicarMaterialDinamico(matPava, datosActual, texActual, procActual, normalActual);
+                }
+                
+                pavaObj.AddComponent<MeshRenderer>().material = matPava;
+                objetosEscena.Add(pavaObj);
+            }
         }
     }
 
