@@ -41,6 +41,12 @@ public class CamaraController : MonoBehaviour
         if (modoActual == ModoCamara.PrimeraPersona) eye = posInicialFPP;
         else CalcularPosicionOrbital();
 
+        // =======================================================
+        // APLICACIÓN PERMANENTE DE ANTI-ALIASING AL INICIAR
+        // MSAA 8x (Geometría) + Trilineal/Aniso 16x (Texturas)
+        // =======================================================
+        AplicarAntiAliasing(8, FilterMode.Trilinear, 16);
+
         ActualizarTodo();
     }
 
@@ -70,25 +76,19 @@ public class CamaraController : MonoBehaviour
     // ==========================================
     void ManejarTecladoEstado()
     {
-        // TECLA C: Alternar Primera Persona / Orbital
         if (Input.GetKeyDown(KeyCode.C))
         {
-            if (modoActual == ModoCamara.PrimeraPersona)
-                modoActual = ultimoModoOrbital;
-            else
-                modoActual = ModoCamara.PrimeraPersona;
-
+            if (modoActual == ModoCamara.PrimeraPersona) modoActual = ultimoModoOrbital;
+            else modoActual = ModoCamara.PrimeraPersona;
             ResetearVista();
         }
 
-        // TECLA Z: Alternar Orbital Auto / Orbital Pasos
         if (Input.GetKeyDown(KeyCode.Z) && modoActual != ModoCamara.PrimeraPersona)
         {
             modoActual = (modoActual == ModoCamara.OrbitalPasos) ? ModoCamara.OrbitalAuto : ModoCamara.OrbitalPasos;
             ultimoModoOrbital = modoActual;
         }
 
-        // TECLA V: Alternar Foco Global / Individual
         if (Input.GetKeyDown(KeyCode.V) && modoActual != ModoCamara.PrimeraPersona)
         {
             focoGlobal = !focoGlobal;
@@ -96,26 +96,21 @@ public class CamaraController : MonoBehaviour
             AplicarFoco();
         }
 
-        // TECLAS E / Q: Navegar entre objetos (Siguiente / Anterior)
         if (!focoGlobal && sceneManager.objetosEscena.Count > 0 && modoActual != ModoCamara.PrimeraPersona)
         {
-            if (Input.GetKeyDown(KeyCode.E)) // Siguiente
+            if (Input.GetKeyDown(KeyCode.E))
             {
                 indiceObjetoActual = (indiceObjetoActual + 1) % sceneManager.objetosEscena.Count;
                 AplicarFoco();
             }
-            if (Input.GetKeyDown(KeyCode.Q)) // Anterior
+            if (Input.GetKeyDown(KeyCode.Q))
             {
                 indiceObjetoActual = (indiceObjetoActual - 1 + sceneManager.objetosEscena.Count) % sceneManager.objetosEscena.Count;
                 AplicarFoco();
             }
         }
 
-        // TECLA R: Resetear Vista
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            ResetearVista();
-        }
+        if (Input.GetKeyDown(KeyCode.R)) ResetearVista();
     }
 
     // ==========================================
@@ -123,8 +118,7 @@ public class CamaraController : MonoBehaviour
     // ==========================================
     void AplicarFoco()
     {
-        yaw = 0f; // Reiniciamos el ángulo al cambiar de objetivo
-
+        yaw = 0f;
         if (focoGlobal)
         {
             target = centroGlobal;
@@ -147,21 +141,19 @@ public class CamaraController : MonoBehaviour
 
         if (renderers.Length > 0)
         {
-            // Calculamos la caja delimitadora (Bounds) agrupando todas las mallas del objeto
             Bounds b = renderers[0].bounds;
             for (int i = 1; i < renderers.Length; i++) b.Encapsulate(renderers[i].bounds);
 
             target = b.center;
-            // Ajustamos la distancia basándonos en el tamaño real de la pava/mueble
             distancia = b.extents.magnitude * 1.0f;
-            if (distancia < 0.6f) distancia = 0.6f; // Tope mínimo
+            if (distancia < 0.6f) distancia = 0.6f;
         }
         else
         {
             target = obj.transform.position;
             distancia = 3f;
         }
-        pitch = 25f; // Inclinación cómoda para objetos individuales
+        pitch = 25f;
     }
 
     void ResetearVista()
@@ -187,7 +179,6 @@ public class CamaraController : MonoBehaviour
         if (Input.GetKey(KeyCode.UpArrow)) distancia -= 20f * Time.deltaTime;
         if (Input.GetKey(KeyCode.DownArrow)) distancia += 20f * Time.deltaTime;
 
-        // Ajusté el clamp mínimo para que deje hacer zoom de cerca en las pavas
         distancia = Mathf.Clamp(distancia, 1f, 45f);
 
         if (modoActual == ModoCamara.OrbitalAuto)
@@ -288,5 +279,41 @@ public class CamaraController : MonoBehaviour
                 }
             }
         }
+    }
+
+    // =============================================================
+    // 5. MOTOR GRÁFICO: APLICACIÓN DE CALIDAD
+    // =============================================================
+    private void AplicarAntiAliasing(int nivelMSAA, FilterMode modoFiltro, int nivelAniso)
+    {
+        if (sceneManager == null) return;
+
+        QualitySettings.antiAliasing = nivelMSAA;
+
+        foreach (GameObject obj in sceneManager.objetosEscena)
+        {
+            if (obj == null) continue;
+            Renderer[] renderers = obj.GetComponentsInChildren<Renderer>(true);
+
+            foreach (Renderer r in renderers)
+            {
+                if (r == null) continue;
+                foreach (Material m in r.materials)
+                {
+                    if (m.HasProperty("_MainTex"))
+                    {
+                        Texture tex = m.GetTexture("_MainTex");
+                        if (tex != null && tex is Texture2D)
+                        {
+                            Texture2D t2d = (Texture2D)tex;
+                            t2d.filterMode = modoFiltro;
+                            t2d.anisoLevel = nivelAniso;
+                        }
+                    }
+                }
+            }
+        }
+
+        Debug.Log($"[Motor Gráfico] Corrección Automática Aplicada -> MSAA: {nivelMSAA}x | Filtro Textura: {modoFiltro} | Aniso: {nivelAniso}x");
     }
 }
