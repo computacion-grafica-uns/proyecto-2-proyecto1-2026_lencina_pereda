@@ -28,13 +28,6 @@ public abstract class SceneManagerBase : MonoBehaviour
     {
         // 1. Llama al método de construcción específico de la escena hija (Escena A, B, etc.)
         ConstruirEscena();
-
-        // 2. Sincroniza automáticamente las luces una vez que la escena está armada
-        LuzController luzCtrl = Object.FindFirstObjectByType<LuzController>();
-        if (luzCtrl != null)
-        {
-            luzCtrl.GeneralizarLuces(this);
-        }
     }
 
     // MÉTODO ABSTRACTO: Obliga a cada escena hija a programar cómo se construye a sí misma

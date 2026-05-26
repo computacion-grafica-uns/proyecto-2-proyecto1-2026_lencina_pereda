@@ -100,6 +100,41 @@ public class SceneManagerEscenaA : SceneManagerBase
                 objetosEscena.Add(pavaObj);
             }
         }
+
+        CamaraController camara = Object.FindFirstObjectByType<CamaraController>();
+        if (camara != null)
+        {
+            // Centro de la grilla: (0f, 0.7f, 0f)
+            // Distancia Orbital Inicial: 6.5f (Bien de cerca)
+            // Pitch Inicial: 25f
+            // Posición Inicial FPP: (0f, 1.5f, -4f)
+            camara.ConfigurarCamara(new Vector3(0f, 0.7f, 0f), 6.5f, 25f, new Vector3(0f, 1.5f, -4f));
+        }
+
+        // ==========================================
+        // 4. CONFIGURACIÓN PROPIA DE LUCES (ESCENA A)
+        // ==========================================
+        LuzController luces = Object.FindFirstObjectByType<LuzController>();
+        if (luces != null)
+        {
+            // Seteamos las variables del controlador usando los valores heredados de la base
+            luces.rotacionDireccional = rotSolInicial;
+            luces.dirColor = colorSol; // Corregido a dirColor
+            luces.intensidadDir = intensidadSolInicial;
+            luces.velocidadRotacionSol = velocidadSol;
+
+            luces.posPuntual = posPuntualInicial;
+            luces.puntualColor = colorPuntual;
+            luces.intensidadPuntual = intensidadPuntualInicial;
+            luces.radioPuntual = radioPuntualInicial;
+
+            luces.posSpot = posSpotInicial;
+            luces.rotacionSpot = rotSpotInicial;
+            luces.spotColor = colorSpot;
+            luces.intensidadSpot = intensidadSpotInicial;
+            luces.radioSpot = radioSpotInicial;
+            luces.aperturaAngulo = aperturaSpotInicial;
+        }
     }
 
     // --- EL CEREBRO DEL MATERIAL DINÁMICO ---

@@ -7,6 +7,8 @@ public class SceneManagerEscenaB : SceneManagerBase
 
     [Header("Configuración Inicial")]
     public Vector3 centroCasa = new Vector3(0f, 1f, 0f);
+    public float distanciaOrbitalInicial = 10f; 
+    public float inclinacionOrbitalInicial = 30f;
     public Vector3 posInicioFPP = new Vector3(0f, 1.5f, -5f); // Donde arranca la primera persona
 
     protected override void ConstruirEscena()
@@ -36,12 +38,45 @@ public class SceneManagerEscenaB : SceneManagerBase
         CamaraController camara = Object.FindFirstObjectByType<CamaraController>();
         if (camara != null)
         {
-            // Le pasamos (Target, Distancia Orbital, Inclinación, Posición FPP)
-            camara.ConfigurarCamara(centroCasa, 25f, 30f, posInicioFPP);
+            // Le pasamos las variables expuestas en el Inspector en lugar de números fijos
+            camara.ConfigurarCamara(centroCasa, distanciaOrbitalInicial, inclinacionOrbitalInicial, posInicioFPP);
         }
 
-        // 3. CONFIGURAR LAS LUCES (Opcional, si tenés un método similar)
-        // LuzController luces = Object.FindFirstObjectByType<LuzController>();
-        // if (luces != null) { luces.ConfigurarLuces(...); }
+        /// ==========================================
+        // 3. CONFIGURAR LAS LUCES (ID4587 e ID4227)
+        // ==========================================
+        LuzController luces = Object.FindFirstObjectByType<LuzController>();
+        if (luces != null)
+        {
+            // Inicializamos los estados compartidos heredados de la base
+            luces.rotacionDireccional = rotSolInicial;
+            luces.dirColor = colorSol; // Corregido a dirColor
+            luces.intensidadDir = 2.5f;     // Sol potenciado para la casa
+            luces.velocidadRotacionSol = velocidadSol;
+            luces.puntualColor = colorPuntual;
+            luces.spotColor = colorSpot;
+            luces.aperturaAngulo = aperturaSpotInicial;
+
+            Vector3 posID4587 = centroCasa;
+            Vector3 posID4227 = centroCasa;
+
+            // Escaneo forense de nodos por identificador
+            Transform[] todosLosTransforms = raizModelos.GetComponentsInChildren<Transform>(true);
+            foreach (Transform t in todosLosTransforms)
+            {
+                if (t.name.Contains("ID4587")) posID4587 = t.position;
+                if (t.name.Contains("ID4227")) posID4227 = t.position;
+            }
+
+            // --- SETEO DE PARÁMETROS ESPECÍFICOS DE LA CASA ---
+            luces.posPuntual = posID4587 + new Vector3(0f, 2.0f, 0f);
+            luces.radioPuntual = 3.5f;
+            luces.intensidadPuntual = 4.0f;
+
+            luces.posSpot = posID4227 + new Vector3(0f, 3f, 4.0f);
+            luces.rotacionSpot = new Vector3(15f, 180f, 0f);
+            luces.radioSpot = 18f;
+            luces.intensidadSpot = 5.0f;
+        }
     }
 }
