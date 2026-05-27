@@ -101,7 +101,7 @@ public class SceneManagerEscenaA : SceneManagerBase
             }
         }
 
-        CamaraController camara = Object.FindFirstObjectByType<CamaraController>();
+        ControladorCamara camara = Object.FindFirstObjectByType<ControladorCamara>();
         if (camara != null)
         {
             // Centro de la grilla: (0f, 0.7f, 0f)
