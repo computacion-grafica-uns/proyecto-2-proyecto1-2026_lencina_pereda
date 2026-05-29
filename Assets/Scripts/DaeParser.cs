@@ -177,10 +177,10 @@ public static class DaeParser
                     // Negamos la X para des-espejar el modelo y que quede del lado correcto
                     outVerts.Add(new Vector3(-posArr[pi*3], posArr[pi*3+1], posArr[pi*3+2]));
 
-                    if (uvArr != null && ui >= 0) 
-                        outUVs.Add(new Vector2(uvArr[ui*2], 1f - uvArr[ui*2+1]));
-                    else 
-                        outUVs.Add(Vector2.zero);
+                   if (uvArr != null && ui >= 0) 
+						outUVs.Add(new Vector2(uvArr[ui*2], uvArr[ui*2+1]));
+					else 
+						outUVs.Add(Vector2.zero);
 
                     vertexCache[key] = vertexIndex;
                 }
