@@ -217,7 +217,7 @@ MonoBehaviour:
   - {fileID: 4800000, guid: 9079bd638994a604cb59a2970b9392c0, type: 3}
   - {fileID: 4800000, guid: 3ebff6d5d2154684bbcfa11512d32ce0, type: 3}
   - {fileID: 4800000, guid: 3ebff6d5d2154684bbcfa11512d32ce0, type: 3}
-  - {fileID: 4800000, guid: 3ebff6d5d2154684bbcfa11512d32ce0, type: 3}
+  - {fileID: 4800000, guid: 0548a6ce415885a4e8b2c58ce73d8937, type: 3}
   - {fileID: 4800000, guid: 0548a6ce415885a4e8b2c58ce73d8937, type: 3}
   - {fileID: 4800000, guid: 3ebff6d5d2154684bbcfa11512d32ce0, type: 3}
   - {fileID: 4800000, guid: 9079bd638994a604cb59a2970b9392c0, type: 3}
@@ -274,7 +274,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 2800000, guid: 6d72cc7d37f17f544954b58696ebe242, type: 3}
   - {fileID: 2800000, guid: 6d72cc7d37f17f544954b58696ebe242, type: 3}
   - {fileID: 0}
   - {fileID: 0}
@@ -485,6 +485,9 @@ MonoBehaviour:
   mostrarMarcadorDir: 1
   mostrarMarcadorPuntual: 1
   mostrarMarcadorSpot: 1
+  objSol: Luz direccional - sol.obj
+  objLampara: Luz Puntual - lampara.obj
+  objLinterna: Luz Spot - Linterna.obj
   shaderDir: {fileID: 4800000, guid: 3ebff6d5d2154684bbcfa11512d32ce0, type: 3}
   matDataDir: {fileID: 11400000, guid: 97f3e4f371d71744b9419de5e69f449b, type: 2}
   texturaDir: {fileID: 0}

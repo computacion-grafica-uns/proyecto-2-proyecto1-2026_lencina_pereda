@@ -194,6 +194,27 @@ MonoBehaviour:
   dirActiva: 1
   puntualActiva: 0
   spotActiva: 0
+  mostrarMarcadorDir: 1
+  mostrarMarcadorPuntual: 0
+  mostrarMarcadorSpot: 1
+  objSol: Luz direccional - sol.obj
+  objLampara: Luz Puntual - lampara.obj
+  objLinterna: Luz Spot - Linterna.obj
+  shaderDir: {fileID: 0}
+  matDataDir: {fileID: 0}
+  texturaDir: {fileID: 0}
+  texturaProceduralDir: {fileID: 0}
+  normalDir: {fileID: 0}
+  shaderPuntual: {fileID: 0}
+  matDataPuntual: {fileID: 0}
+  texturaPuntual: {fileID: 0}
+  texturaProceduralPuntual: {fileID: 0}
+  normalPuntual: {fileID: 0}
+  shaderSpot: {fileID: 0}
+  matDataSpot: {fileID: 0}
+  texturaSpot: {fileID: 0}
+  texturaProceduralSpot: {fileID: 0}
+  normalSpot: {fileID: 0}
   rotacionDireccional: {x: 0, y: 0, z: 0}
   dirColor: {r: 0, g: 0, b: 0, a: 0}
   intensidadDir: 0
@@ -18607,10 +18628,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   datosMaterial: {fileID: 11400000, guid: 2badfb3267e7f1449807cd9715f618d6, type: 2}
-  shaderAUsar: {fileID: 4800000, guid: 3ebff6d5d2154684bbcfa11512d32ce0, type: 3}
+  shaderAUsar: {fileID: 4800000, guid: 0548a6ce415885a4e8b2c58ce73d8937, type: 3}
   texturaBase: {fileID: 0}
   texturaProcedural: {fileID: 11400000, guid: ddc228e46e7b4ff459aeb8bba9e88da9, type: 2}
-  mapaDeNormales: {fileID: 0}
+  mapaDeNormales: {fileID: 2800000, guid: 6d72cc7d37f17f544954b58696ebe242, type: 3}
 --- !u!4 &7477518968170068672
 Transform:
   m_ObjectHideFlags: 0

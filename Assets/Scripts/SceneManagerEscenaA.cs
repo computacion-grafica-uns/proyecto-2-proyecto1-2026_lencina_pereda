@@ -28,7 +28,9 @@ public class SceneManagerEscenaA : SceneManagerBase
     {
         if (shaderPiso == null) return;
 
+        // ==========================================
         // 1. CARGA DEL PISO
+        // ==========================================
         string rutaPiso = Path.Combine(Application.dataPath, "Models/Escena A", nombreArchivoObj);
         Mesh meshPiso = File.Exists(rutaPiso) ? ObjParser.Parse(rutaPiso) : null;
 
@@ -45,7 +47,9 @@ public class SceneManagerEscenaA : SceneManagerBase
             objetosEscena.Add(pisoObj);
         }
 
+        // ==========================================
         // 2. CARGA DE LAS 18 PAVAS
+        // ==========================================
         string rutaPava = Path.Combine(Application.dataPath, "Models/Escena A", nombreArchivoDae);
         // Parseamos la malla una sola vez por rendimiento
         Mesh meshPava = File.Exists(rutaPava) ? DaeParser.Parse(rutaPava) : null;
@@ -63,14 +67,38 @@ public class SceneManagerEscenaA : SceneManagerBase
                 int fila = i / 6;
 
                 // Grilla centrada exactamente en el origen (0,0)
-                // X (Columnas): -2.5, -1.5, -0.5, 0.5, 1.5, 2.5
-                // Z (Filas): -1.25 (Detrás), 0.0 (Medio), 1.25 (Adelante)
                 float posX = -2.5f + (col * 1.0f);
                 float posZ = -1.25f + (fila * 1.25f);
                 
                 Vector3 posicionIndividual = new Vector3(posX, alturaBase, posZ);
 
-                GameObject pavaObj = new GameObject($"Pava_EscenaA_{i}");
+                // Extracción segura del Inspector para esta pava en específico
+                Shader shaderActual = (shadersPavas != null && i < shadersPavas.Length && shadersPavas[i] != null) ? shadersPavas[i] : shaderPiso;
+                DatosMaterial datosActual = (materialesPavas != null && i < materialesPavas.Length) ? materialesPavas[i] : null;
+                Texture2D texActual = (texturasPavas != null && i < texturasPavas.Length) ? texturasPavas[i] : null;
+                TexturaProcedural procActual = (texturasProceduralesPavas != null && i < texturasProceduralesPavas.Length) ? texturasProceduralesPavas[i] : null;
+                Texture2D normalActual = (mapasDeNormalesPavas != null && i < mapasDeNormalesPavas.Length) ? mapasDeNormalesPavas[i] : null;
+
+                // --- MAGIA DEL RENOMBRADO DINÁMICO ---
+                string nMat = datosActual != null ? datosActual.name : "SinMat";
+                
+                string nTex = "SinTex";
+                if (texActual != null) nTex = texActual.name;
+                else if (procActual != null) nTex = procActual.name;
+                
+                string nNorm = normalActual != null ? normalActual.name : "SinNorm";
+
+                string nShader = shaderActual != null ? shaderActual.name : "SinShader";
+                if (nShader.Contains("/")) {
+                    string[] partes = nShader.Split('/');
+                    nShader = partes[partes.Length - 1];
+                }
+
+                // Generamos el nombre descriptivo con el índice al principio para mantener el orden
+                string nombreGenerado = $"Pava_{i:00}_{nMat}_{nTex}_{nNorm}_{nShader}";
+
+                // Instanciamos el objeto usando el nombre dinámico en lugar de "Pava_EscenaA_i"
+                GameObject pavaObj = new GameObject(nombreGenerado);
                 pavaObj.transform.SetParent(this.transform);
                 
                 pavaObj.transform.localPosition = posicionIndividual;
@@ -80,13 +108,6 @@ public class SceneManagerEscenaA : SceneManagerBase
                 // Reutilizamos la misma malla parseada para ahorrar RAM
                 pavaObj.AddComponent<MeshFilter>().mesh = meshPava;
                 pavaObj.AddComponent<ModelMatrix>();
-
-                // Extracción segura del Inspector para esta pava en específico
-                Shader shaderActual = (shadersPavas != null && i < shadersPavas.Length && shadersPavas[i] != null) ? shadersPavas[i] : shaderPiso;
-                DatosMaterial datosActual = (materialesPavas != null && i < materialesPavas.Length) ? materialesPavas[i] : null;
-                Texture2D texActual = (texturasPavas != null && i < texturasPavas.Length) ? texturasPavas[i] : null;
-                TexturaProcedural procActual = (texturasProceduralesPavas != null && i < texturasProceduralesPavas.Length) ? texturasProceduralesPavas[i] : null;
-                Texture2D normalActual = (mapasDeNormalesPavas != null && i < mapasDeNormalesPavas.Length) ? mapasDeNormalesPavas[i] : null;
 
                 // Creación de material aislado en memoria de video
                 Material matPava = new Material(shaderActual);
@@ -104,10 +125,6 @@ public class SceneManagerEscenaA : SceneManagerBase
         ControladorCamara camara = Object.FindFirstObjectByType<ControladorCamara>();
         if (camara != null)
         {
-            // Centro de la grilla: (0f, 0.7f, 0f)
-            // Distancia Orbital Inicial: 6.5f (Bien de cerca)
-            // Pitch Inicial: 25f
-            // Posición Inicial FPP: (0f, 1.5f, -4f)
             camara.ConfigurarCamara(new Vector3(0f, 0.7f, 0f), 6.5f, 25f, new Vector3(0f, 1.5f, -4f));
         }
 
@@ -117,9 +134,8 @@ public class SceneManagerEscenaA : SceneManagerBase
         LuzController luces = Object.FindFirstObjectByType<LuzController>();
         if (luces != null)
         {
-            // Seteamos las variables del controlador usando los valores heredados de la base
             luces.rotacionDireccional = rotSolInicial;
-            luces.dirColor = colorSol; // Corregido a dirColor
+            luces.dirColor = colorSol; 
             luces.intensidadDir = intensidadSolInicial;
             luces.velocidadRotacionSol = velocidadSol;
 
@@ -148,10 +164,8 @@ public class SceneManagerEscenaA : SceneManagerBase
         float opacidad = datos != null ? datos.opacidad : 1.0f;
 
         // Jerarquía de Texturas
-        // Jerarquía de Texturas
         Texture2D texturaFinal = texPNG != null ? texPNG : (texProc != null ? texProc.GenerarTexturaEnMemoria() : null);
 
-       
         mat.SetColor("_MatColor", tinte); 
 
         if (texturaFinal != null) {
@@ -178,17 +192,15 @@ public class SceneManagerEscenaA : SceneManagerBase
 
         // --- MAGIA DE TRANSPARENCIA DINÁMICA ---
         if (opacidad < 1.0f) {
-            // Convierte el shader a Transparente (Vidrio)
             mat.SetFloat("_SrcBlend", (float)UnityEngine.Rendering.BlendMode.SrcAlpha);
             mat.SetFloat("_DstBlend", (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
             mat.SetFloat("_ZWrite", 0f);
-            mat.renderQueue = 3000; // Queue de Transparencia
+            mat.renderQueue = 3000; 
         } else {
-            // Mantiene el shader Opaco sólido (Barro, Metal)
             mat.SetFloat("_SrcBlend", (float)UnityEngine.Rendering.BlendMode.One);
             mat.SetFloat("_DstBlend", (float)UnityEngine.Rendering.BlendMode.Zero);
             mat.SetFloat("_ZWrite", 1f);
-            mat.renderQueue = 2000; // Queue de Geometría
+            mat.renderQueue = 2000; 
         }
     }
 }

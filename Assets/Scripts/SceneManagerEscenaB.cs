@@ -9,7 +9,7 @@ public class SceneManagerEscenaB : SceneManagerBase
     public Vector3 centroCasa = new Vector3(0f, 1f, 0f);
     public float distanciaOrbitalInicial = 10f; 
     public float inclinacionOrbitalInicial = 30f;
-    public Vector3 posInicioFPP = new Vector3(0f, 1.5f, -5f); // Donde arranca la primera persona
+    public Vector3 posInicioFPP = new Vector3(0f, 1.5f, -5f); 
 
     protected override void ConstruirEscena()
     {
@@ -19,7 +19,9 @@ public class SceneManagerEscenaB : SceneManagerBase
             return;
         }
 
-        // 1. INYECTAR MATRICES Y REGISTRAR OBJETOS DE LA CASA
+        // ====================================================================
+        // 1. INYECTAR MATRICES, REGISTRAR OBJETOS Y RENOMBRAR DINÁMICAMENTE
+        // ====================================================================
         Renderer[] todosLosRenderers = raizModelos.GetComponentsInChildren<Renderer>();
         foreach (Renderer r in todosLosRenderers)
         {
@@ -31,27 +33,76 @@ public class SceneManagerEscenaB : SceneManagerBase
             {
                 objetosEscena.Add(r.gameObject);
             }
+
+            // --- RENOMBRADO BASADO EN LA SEPARACIÓN DE RESPONSABILIDADES ---
+            ConfiguradorMaterial config = r.GetComponent<ConfiguradorMaterial>();
+
+            if (config != null)
+            {
+                // PRIORIDAD 1: Lectura directa desde tu ConfiguradorMaterial (Inspector)
+                string nMat = config.datosMaterial != null ? config.datosMaterial.name : "SinMat";
+                
+                string nTex = "SinTex";
+                if (config.texturaBase != null) nTex = config.texturaBase.name;
+                else if (config.texturaProcedural != null) nTex = config.texturaProcedural.name;
+
+                string nNorm = config.mapaDeNormales != null ? config.mapaDeNormales.name : "SinNorm";
+
+                string nShader = config.shaderAUsar != null ? config.shaderAUsar.name : "SinShader";
+                if (nShader.Contains("/")) {
+                    string[] partes = nShader.Split('/');
+                    nShader = partes[partes.Length - 1];
+                }
+
+                r.gameObject.name = $"{r.gameObject.name}_{nMat}_{nTex}_{nNorm}_{nShader}";
+            }
+            else
+            {
+                // PRIORIDAD 2 (FALLBACK): Lectura del material genérico importado por defecto
+                Material mat = r.sharedMaterial;
+                if (mat != null)
+                {
+                    string nMat = mat.name.Replace(" (Instance)", "");
+                    
+                    string nTex = "SinTex";
+                    Texture texPrincipal = mat.HasProperty("_MainTex") ? mat.GetTexture("_MainTex") : mat.mainTexture;
+                    if (texPrincipal != null) nTex = texPrincipal.name;
+
+                    string nNorm = "SinNorm";
+                    if (mat.HasProperty("_NormalMap") && mat.GetTexture("_NormalMap") != null)
+                        nNorm = mat.GetTexture("_NormalMap").name;
+                    else if (mat.HasProperty("_BumpMap") && mat.GetTexture("_BumpMap") != null)
+                        nNorm = mat.GetTexture("_BumpMap").name;
+
+                    string nShader = mat.shader != null ? mat.shader.name : "SinShader";
+                    if (nShader.Contains("/")) {
+                        string[] partes = nShader.Split('/');
+                        nShader = partes[partes.Length - 1];
+                    }
+
+                    r.gameObject.name = $"{r.gameObject.name}_{nMat}_{nTex}_{nNorm}_{nShader}";
+                }
+            }
         }
 
+        // ==========================================
         // 2. CONFIGURAR LA CÁMARA
-        // Buscamos el objeto "Camaras" que tiene tu CamaraController
+        // ==========================================
         CamaraController camara = Object.FindFirstObjectByType<CamaraController>();
         if (camara != null)
         {
-            // Le pasamos las variables expuestas en el Inspector en lugar de números fijos
             camara.ConfigurarCamara(centroCasa, distanciaOrbitalInicial, inclinacionOrbitalInicial, posInicioFPP);
         }
 
-        /// ==========================================
+        // ==========================================
         // 3. CONFIGURAR LAS LUCES (ID4587 e ID4227)
         // ==========================================
         LuzController luces = Object.FindFirstObjectByType<LuzController>();
         if (luces != null)
         {
-            // Inicializamos los estados compartidos heredados de la base
             luces.rotacionDireccional = rotSolInicial;
-            luces.dirColor = colorSol; // Corregido a dirColor
-            luces.intensidadDir = 2.5f;     // Sol potenciado para la casa
+            luces.dirColor = colorSol; 
+            luces.intensidadDir = 2.5f;     
             luces.velocidadRotacionSol = velocidadSol;
             luces.puntualColor = colorPuntual;
             luces.spotColor = colorSpot;
