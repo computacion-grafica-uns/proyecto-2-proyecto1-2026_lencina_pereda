@@ -393,6 +393,8 @@ MonoBehaviour:
   modoActual: 2
   eye: {x: 0, y: 0, z: 0}
   target: {x: 0, y: 0, z: 0}
+  focoGlobal: 1
+  indiceObjetoActual: 0
 --- !u!4 &781831581
 Transform:
   m_ObjectHideFlags: 0
@@ -480,6 +482,24 @@ MonoBehaviour:
   dirActiva: 1
   puntualActiva: 0
   spotActiva: 0
+  mostrarMarcadorDir: 1
+  mostrarMarcadorPuntual: 1
+  mostrarMarcadorSpot: 1
+  shaderDir: {fileID: 4800000, guid: 3ebff6d5d2154684bbcfa11512d32ce0, type: 3}
+  matDataDir: {fileID: 11400000, guid: 97f3e4f371d71744b9419de5e69f449b, type: 2}
+  texturaDir: {fileID: 0}
+  texturaProceduralDir: {fileID: 0}
+  normalDir: {fileID: 0}
+  shaderPuntual: {fileID: 4800000, guid: 3ebff6d5d2154684bbcfa11512d32ce0, type: 3}
+  matDataPuntual: {fileID: 11400000, guid: 97f3e4f371d71744b9419de5e69f449b, type: 2}
+  texturaPuntual: {fileID: 0}
+  texturaProceduralPuntual: {fileID: 0}
+  normalPuntual: {fileID: 0}
+  shaderSpot: {fileID: 4800000, guid: 3ebff6d5d2154684bbcfa11512d32ce0, type: 3}
+  matDataSpot: {fileID: 11400000, guid: 97f3e4f371d71744b9419de5e69f449b, type: 2}
+  texturaSpot: {fileID: 0}
+  texturaProceduralSpot: {fileID: 0}
+  normalSpot: {fileID: 0}
   rotacionDireccional: {x: 0, y: 0, z: 0}
   dirColor: {r: 0, g: 0, b: 0, a: 0}
   intensidadDir: 0

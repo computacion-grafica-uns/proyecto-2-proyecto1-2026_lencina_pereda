@@ -53,9 +53,9 @@ public class SceneManagerEscenaA : SceneManagerBase
         if (meshPava != null)
         {
             // Parámetros físicos harcodeados internamente para limpiar el Inspector
-            Vector3 escalaPava = new Vector3(0.03f, 0.03f, 0.03f);
+            Vector3 escalaPava = new Vector3(0.02f, 0.02f, 0.02f);
             Vector3 rotacionPava = new Vector3(0f, 0f, 0f);
-            float alturaBase = 0.7f;
+            float alturaBase = 0.6f;
 
             for (int i = 0; i < 18; i++)
             {

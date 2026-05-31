@@ -197,7 +197,7 @@ Shader "Custom/ShaderCookTorrance"
                 }
 
                 // Sumamos la ambiental base
-                float3 ambient = albedo.rgb * 0.1;
+                float3 ambient = albedo.rgb * 0.3;
                 return float4(ambient + totalRadiance, _Opacidad);
             }
             ENDCG

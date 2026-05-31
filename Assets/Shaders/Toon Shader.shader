@@ -139,7 +139,7 @@ Shader "Custom/ShaderSuperToon"
                 }
 
                 // Luz ambiental 
-                float3 ambient = albedo.rgb * 0.1;
+                float3 ambient = albedo.rgb * 0.3;
                 return float4(ambient + colorDifusoFinal + colorEspecularFinal, _Opacidad);
             }
             ENDCG

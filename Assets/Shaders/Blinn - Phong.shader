@@ -108,7 +108,7 @@ Shader "Custom/ShaderBlinn-Phong"
                 float3 totalSpecular = float3(0,0,0);
                 
                 // Luz ambiental base para que no sea negro absoluto sin luces
-                float3 ambient = albedo.rgb * 0.1;
+                float3 ambient = albedo.rgb * 0.3;
 
                 // 1. DIRECCIONAL
                 if (_DirLightActive > 0.5) {
