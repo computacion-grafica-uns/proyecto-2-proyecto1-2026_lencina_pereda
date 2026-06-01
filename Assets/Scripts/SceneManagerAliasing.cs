@@ -67,7 +67,7 @@ public class SceneManagerAliasing : SceneManagerBase
 
             escalaPava = new Vector3(0.03f, 0.03f, 0.03f);
             posicionPava = new Vector3(0f, 0.7f, 0f);
-            rotacionPava = new Vector3(90f, 0f, 0f);
+            rotacionPava = new Vector3(0f, 0f, 0f);
 
             pavaObj.transform.position = posicionPava;
             pavaObj.transform.eulerAngles = rotacionPava;
