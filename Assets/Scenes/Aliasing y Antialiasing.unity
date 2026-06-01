@@ -206,9 +206,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6f56ada48cf3df4c90bdcfa40c35bd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dirActiva: 0
-  puntualActiva: 1
+  dirActiva: 1
+  puntualActiva: 0
   spotActiva: 0
+  mostrarMarcadorDir: 1
+  mostrarMarcadorPuntual: 1
+  mostrarMarcadorSpot: 1
+  objSol: Luz direccional - sol.obj
+  objLampara: Luz Puntual - lampara.obj
+  objLinterna: Luz Spot - Linterna.obj
+  shaderDir: {fileID: 0}
+  matDataDir: {fileID: 0}
+  texturaDir: {fileID: 0}
+  texturaProceduralDir: {fileID: 0}
+  normalDir: {fileID: 0}
+  shaderPuntual: {fileID: 0}
+  matDataPuntual: {fileID: 0}
+  texturaPuntual: {fileID: 0}
+  texturaProceduralPuntual: {fileID: 0}
+  normalPuntual: {fileID: 0}
+  shaderSpot: {fileID: 0}
+  matDataSpot: {fileID: 0}
+  texturaSpot: {fileID: 0}
+  texturaProceduralSpot: {fileID: 0}
+  normalSpot: {fileID: 0}
   rotacionDireccional: {x: 0, y: 0, z: 0}
   dirColor: {r: 0, g: 0, b: 0, a: 0}
   intensidadDir: 0
